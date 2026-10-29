@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es" class="gated" data-gate="lista">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.google.com https://*.firebaseio.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://mc-heads.net https://*.googleusercontent.com https://www.gstatic.com; connect-src https://*.firebaseio.com https://*.firebasedatabase.app wss://*.firebaseio.com wss://*.firebasedatabase.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firebaseinstallations.googleapis.com https://content-firebaseappcheck.googleapis.com https://www.google.com; frame-src https://*.firebaseapp.com https://www.google.com https://recaptcha.google.com;">
+<meta name="referrer" content="strict-origin">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171717">
+<title>Ruleta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://mc-heads.net">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="ruleta.css">
+</head>
+<body>
+<header class="shell gutter">
+  <div class="shell-in">
+    <div class="brand">
+      <a class="back" href="../"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M8 1.5 3.5 6 8 10.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg> Herramientas</a>
+      <h1 id="hTitle">Ruleta</h1>
+    </div>
+    <div class="tools-top">
+      <div class="live" id="live"></div>
+      <span class="sync" id="sync" aria-live="polite">Guardado en este navegador</span>
+      <button class="btn sm" id="exportBtn" type="button">Exportar</button>
+      <button class="btn sm" id="importBtn" type="button">Importar</button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </div>
+  </div>
+</header>
+
+<main class="gutter">
+  <div class="layout">
+    <section class="panel stagep" aria-labelledby="wT">
+      <h2 id="wT" class="vh">Ruleta</h2>
+      <div class="turns" id="turns"></div>
+      <div class="wheelbox"><canvas id="wheel" width="720" height="720" role="img" aria-label="Ruleta"></canvas></div>
+      <div class="spinrow">
+        <button class="btn primary big" type="button" id="spin">Girar</button>
+        <button class="btn" type="button" id="again" hidden>Volver a llenar la ruleta</button>
+        <p class="msg" id="spinMsg" aria-live="polite"></p>
+      </div>
+      <div class="result" id="result" aria-live="polite"></div>
+    </section>
+
+    <div class="side-col">
+      <section class="panel" aria-labelledby="iT">
+        <div class="ph"><h2 id="iT">Opciones</h2><span class="count" id="iCount"></span></div>
+        <form id="addI" class="addp" autocomplete="off" novalidate>
+          <label class="f grow"><span>Agregar opción</span><input type="text" id="iName" name="opcion" maxlength="40" placeholder="Premio, castigo, Pokémon…" spellcheck="false"></label>
+          <button class="btn primary" type="submit">Agregar</button>
+        </form>
+        <details class="bulk"><summary>Pegar varias a la vez</summary>
+          <label class="f"><span>Una por línea</span><textarea id="bulk" name="varias" rows="5" placeholder="Diamante&#10;Esmeralda&#10;Nada…" spellcheck="false"></textarea></label>
+          <div class="row"><button class="btn sm" type="button" id="bulkAdd">Agregar todas</button></div>
+        </details>
+        <p class="msg" id="iMsg" aria-live="polite"></p>
+        <ul class="ilist" id="ilist"></ul>
+      </section>
+
+      <section class="panel" aria-labelledby="pT">
+        <div class="ph"><h2 id="pT">Jugadores</h2><span class="count" id="pCount"></span></div>
+        <p class="hint" id="pHint"></p>
+        <form id="addP" class="addp" autocomplete="off" novalidate>
+          <label class="f grow"><span>Nombre</span><input type="text" id="pName" name="nombre" maxlength="24" placeholder="Nombre o nick de Minecraft…" spellcheck="false"></label>
+          <label class="check"><input type="checkbox" id="pMc" name="minecraft"> Es de Minecraft</label>
+          <button class="btn primary" type="submit">Agregar</button>
+        </form>
+        <p class="msg" id="pMsg" aria-live="polite"></p>
+        <ol class="plist" id="plist"></ol>
+      </section>
+
+      <section class="panel cfg" aria-labelledby="cT">
+        <h2 id="cT">Ajustes</h2>
+        <label class="f"><span>Nombre de la ruleta</span><input type="text" id="title" name="titulo" maxlength="48" placeholder="Ruleta de premios…" autocomplete="off"></label>
+        <div class="f"><span id="elL">Cuando sale una opción, se elimina</span><div class="chips" id="elim" role="radiogroup" aria-labelledby="elL"></div><small class="hint" id="elHint"></small></div>
+        <label class="check"><input type="checkbox" id="auto" name="turnos"> Pasar el turno solo después de cada giro</label>
+        <div class="f"><span id="thL">Color</span><div class="chips" id="theme" role="radiogroup" aria-labelledby="thL"></div></div>
+      </section>
+
+      <section class="panel" aria-labelledby="hT">
+        <div class="ph"><h2 id="hT">Historial</h2><span class="count" id="hCount"></span><span class="hacts" id="hActs"></span></div>
+        <ol class="hist" id="hist"></ol>
+      </section>
+    </div>
+  </div>
+  <p class="note">Caras de Minecraft de <a href="https://mc-heads.net" rel="noopener">mc-heads.net</a> según el nombre de la cuenta.</p>
+</main>
+
+<script src="../shared/storage.js"></script>
+<script src="../shared/firebase-config.js"></script>
+<script src="../shared/sync.js"></script>
+<script src="../shared/gate.js"></script>
+<script src="common.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

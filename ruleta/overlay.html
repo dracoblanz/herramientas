@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; script-src 'self' https://www.gstatic.com https://www.google.com https://*.firebaseio.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://mc-heads.net; connect-src https://*.firebaseio.com https://*.firebasedatabase.app wss://*.firebaseio.com wss://*.firebasedatabase.app https://content-firebaseappcheck.googleapis.com https://www.google.com; frame-src https://www.google.com https://recaptcha.google.com;">
+<meta name="referrer" content="strict-origin">
+<meta name="viewport" content="width=1920,initial-scale=1">
+<title>Overlay Ruleta</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="ruleta.css">
+<link rel="stylesheet" href="overlay.css">
+</head>
+<body class="ov">
+<main class="stage">
+  <div class="wov" id="wov" hidden><canvas id="wheel" width="1000" height="1000"></canvas></div>
+  <ol class="hov" id="hov" hidden></ol>
+  <div class="bov" id="bov" hidden></div>
+  <p class="status" id="status" hidden></p>
+</main>
+<script src="../shared/firebase-config.js"></script>
+<script src="../shared/sync.js"></script>
+<script src="common.js"></script>
+<script src="overlay.js"></script>
+</body>
+</html>

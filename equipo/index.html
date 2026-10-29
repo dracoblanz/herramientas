@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es" class="gated" data-gate="lista">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.google.com https://*.firebaseio.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://raw.githubusercontent.com https://*.googleusercontent.com https://www.gstatic.com; connect-src https://*.firebaseio.com https://*.firebasedatabase.app wss://*.firebaseio.com wss://*.firebasedatabase.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firebaseinstallations.googleapis.com https://content-firebaseappcheck.googleapis.com https://www.google.com; frame-src https://*.firebaseapp.com https://www.google.com https://recaptcha.google.com;">
+<meta name="referrer" content="strict-origin">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171717">
+<title>Equipo Locke</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://raw.githubusercontent.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="editor.css">
+</head>
+<body>
+<header class="shell gutter">
+  <div class="shell-in">
+    <div class="brand">
+      <a class="back" href="../"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M8 1.5 3.5 6 8 10.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg> Herramientas</a>
+      <h1>Equipo Locke</h1>
+    </div>
+    <div class="tools-top">
+      <div class="live" id="live"></div>
+      <span class="sync" id="sync" aria-live="polite">Guardado en este navegador</span>
+      <button class="btn sm" id="exportBtn" type="button">Exportar</button>
+      <button class="btn sm" id="importBtn" type="button">Importar</button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </div>
+  </div>
+</header>
+
+<main class="gutter">
+  <details class="panel reto" id="reto">
+    <summary><h2 id="retoT">Reto</h2><span class="sum" id="retoSum"></span></summary>
+    <div class="reto-grid">
+      <label class="f"><span>Nombre del reto</span><input type="text" id="title" name="titulo" maxlength="40" placeholder="Soul Link Kanto…" autocomplete="off"></label>
+      <div class="f"><span id="modeL">Modo</span><div class="chips" id="mode" role="group" aria-labelledby="modeL"></div></div>
+      <label class="f"><span>Medallas de</span><select id="region" name="region"></select></label>
+      <div class="f"><span id="attL">Intento</span><div class="stepper" role="group" aria-labelledby="attL"><button class="btn sq" type="button" id="attDown" aria-label="Intento anterior"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M1.5 6h9" stroke="currentColor" stroke-width="2.2"/></svg></button><output id="attempt" aria-live="polite">1</output><button class="btn sq" type="button" id="attUp" aria-label="Intento siguiente"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M1.5 6h9M6 1.5v9" stroke="currentColor" stroke-width="2.2"/></svg></button></div></div>
+      <div class="f"><span id="styL">Sprites</span><div class="chips" id="style" role="group" aria-labelledby="styL"></div></div>
+      <label class="check wide sepck"><input type="checkbox" id="sep" name="separado"> <span>Editar al mismo tiempo <small>cada jugador se guarda por separado en la sala, así dos editores no se pisan</small></span></label>
+      <label class="f wide"><span>Reglas <small>(una por línea, hasta 6)</small></span><textarea id="rules" name="reglas" rows="3" maxlength="400" placeholder="Solo el primer encuentro de cada ruta…"></textarea></label>
+    </div>
+  </details>
+
+  <div class="players" id="players"></div>
+
+  <div class="layout">
+    <section class="panel teamp" aria-labelledby="teamT">
+      <div class="ph"><h2 id="teamT">Equipo</h2><span class="count" id="teamCount"></span></div>
+      <ol class="slots" id="team"></ol>
+    </section>
+
+    <section class="panel addp" aria-labelledby="addT">
+      <h2 id="addT">Agregar Pokémon</h2>
+      <form id="add" class="add" autocomplete="off" novalidate>
+        <label class="f grow"><span>Especie</span><input type="text" id="aSp" name="especie" list="allMons" placeholder="Pikachu…" spellcheck="false" required></label>
+        <label class="f"><span>Mote</span><input type="text" id="aNick" name="mote" maxlength="20" placeholder="Opcional…" spellcheck="false"></label>
+        <label class="f lv"><span>Nivel</span><input type="number" id="aLv" name="nivel" min="1" max="100" value="5" inputmode="numeric"></label>
+        <label class="f grow"><span id="linkL">Ruta o enlace</span><input type="text" id="aLink" name="enlace" maxlength="30" placeholder="Ruta 1…" spellcheck="false"></label>
+        <label class="check"><input type="checkbox" id="aShiny" name="shiny"> Shiny</label>
+        <div class="add-go"><button class="btn primary" type="submit">Agregar</button><p class="msg" id="aMsg" aria-live="polite"></p></div>
+      </form>
+      <datalist id="allMons"></datalist>
+    </section>
+
+    <section class="panel badgep" id="badgep" aria-labelledby="badT">
+      <div class="ph"><h2 id="badT">Medallas</h2><span class="count" id="badCount"></span></div>
+      <div class="badges" id="badges"></div>
+    </section>
+
+    <section class="panel boxp" aria-labelledby="boxT">
+      <div class="ph"><h2 id="boxT">Caja</h2><span class="count" id="boxCount"></span></div>
+      <ul class="list" id="box"></ul>
+    </section>
+
+    <section class="panel deadp" aria-labelledby="deadT">
+      <div class="ph"><h2 id="deadT">Cementerio</h2><span class="count" id="deadCount"></span></div>
+      <ul class="list" id="dead"></ul>
+    </section>
+  </div>
+  <p class="note">Sprites, medallas e íconos de tipo de <a href="https://github.com/PokeAPI/sprites" rel="noopener">PokeAPI</a>. Pokémon es marca de Nintendo, Game Freak y Creatures.</p>
+</main>
+
+<script src="../shared/storage.js"></script>
+<script src="../shared/firebase-config.js"></script>
+<script src="../shared/sync.js"></script>
+<script src="../shared/gate.js"></script>
+<script src="../shared/pokedata.js"></script>
+<script src="common.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

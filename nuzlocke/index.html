@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="es" class="gated" data-gate="lista" data-gate-open="sala">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.google.com https://*.firebaseio.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://raw.githubusercontent.com https://*.googleusercontent.com https://www.gstatic.com; connect-src https://*.firebaseio.com https://*.firebasedatabase.app wss://*.firebaseio.com wss://*.firebasedatabase.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firebaseinstallations.googleapis.com https://content-firebaseappcheck.googleapis.com https://www.google.com; frame-src https://*.firebaseapp.com https://www.google.com https://recaptcha.google.com;">
+<meta name="referrer" content="strict-origin">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171717">
+<title>Ruleta Nuzlocke Kanto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://raw.githubusercontent.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --sea:#1f1433;--sea-deep:#593d7f;--land:#2e2e2e;--land-edge:#5a5a5a;--path:#b37bff;--path-edge:#593d7f;--town:#f5f5f5;
+  --ground:#0a0a0a;--panel:#171717;--fg:#f5f5f5;--muted:#a3a3a3;--line:#404040;--line-strong:#737373;
+  --accent:#b37bff;--accent-soft:#2a1f3a;--on-accent:#0a0a0a;--ok:#c9a8ff;--dead:#737373;--done:#8f8f8f;--cursor:#facc15;
+  --s1:#b37bff;--s2:#3b82f6;--s3:#ec4899;--s4:#facc15;--s5:#ef4444;--s6:#593d7f;
+  --cave:#ef4444;--forest:#3b82f6;--bldg:#ec4899;--beach:#e5e5e5;--ruins:#9ca3af;
+  --display:"Pixelify Sans",ui-sans-serif,system-ui,sans-serif;--body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html.gated body>*:not(.gate){display:none!important}
+html{-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--ground);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+::selection{background:var(--accent);color:var(--on-accent)}
+button,input{font:inherit;color:inherit;touch-action:manipulation}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.gutter{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.shell{background:var(--panel);color:var(--fg);border-bottom:3px solid var(--accent)}
+.shell-in{max-width:1320px;margin:0 auto;padding-top:14px;padding-bottom:14px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+.back svg{vertical-align:-1px}
+.back{color:var(--muted);text-decoration:none;font-size:13px;font-weight:700;text-underline-offset:3px}
+.back:hover{color:var(--accent);text-decoration:underline}
+.brand{display:flex;flex-direction:column;gap:2px;margin-right:auto}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(24px,3vw,32px);line-height:1.05;margin:0;letter-spacing:.01em;text-wrap:balance}
+.tools-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.shell .sync{font-size:13px;color:var(--muted)}
+.shell .live .err{color:#fca5a5}
+.live{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.live form{display:flex;gap:6px}
+.live input{width:170px}
+.live .err{font-size:12px;margin:0;flex-basis:100%}
+.onair{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;padding:6px 11px;border-radius:0;background:var(--accent-soft);color:var(--fg)}
+.onair i{width:8px;height:8px;background:#ef4444;flex:none}
+.onair.off i{background:var(--muted)}
+main{max-width:1320px;margin:0 auto;padding-top:16px;padding-bottom:28px}
+.players{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:16px}
+.chip{font:700 13px var(--body);padding:7px 12px;border-radius:0;border:2px solid var(--line);background:var(--panel);cursor:pointer;min-height:36px}
+.chip:hover{border-color:var(--line-strong)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn{font-weight:700;padding:8px 14px;border-radius:0;border:2px solid var(--line);background:var(--panel);cursor:pointer;min-height:40px}
+.btn:hover{background:var(--accent-soft);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.sm{padding:4px 10px;font-size:13px;min-height:32px}
+.ovmenu{position:relative}
+.ovmenu summary{list-style:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.ovmenu summary::-webkit-details-marker{display:none}
+.ovmenu summary::after{content:"";width:6px;height:6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg)}
+.ovmenu[open] summary::after{transform:translateY(1px) rotate(-135deg)}
+.ovlist{position:absolute;top:calc(100% + 4px);left:0;z-index:20;display:flex;flex-direction:column;gap:4px;min-width:140px;padding:6px;background:var(--panel);border:2px solid #593d7f}
+.ovlist .btn{text-align:left;width:100%}
+input[type=text],input[type=search],input[type=number]{padding:8px 10px;border:2px solid var(--line);border-radius:0;background:var(--panel);min-height:40px}
+input::placeholder{color:var(--muted);opacity:1}
+.layout{display:grid;grid-template-columns:minmax(340px,430px) minmax(0,1fr) 320px;grid-template-areas:"map center team" "list center team";grid-template-rows:auto 1fr;gap:16px;align-items:start}
+.mapp{grid-area:map}.listp{grid-area:list}.center{grid-area:center}.teamp{grid-area:team}
+@media (min-width:1181px){.teamp{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain}}
+@media (max-width:1180px){.layout{grid-template-columns:minmax(320px,400px) minmax(0,1fr);grid-template-areas:"map center" "list center" "team team"}}
+@media (max-width:760px){.layout{grid-template-columns:1fr;grid-template-areas:"map" "center" "list" "team";grid-template-rows:none}.shell-in{gap:10px}.tools-top{gap:6px}.shell .sync{order:5;flex-basis:100%}.brand{flex-basis:100%}}
+.panel{background:var(--panel);border:2px solid var(--path-edge);outline:2px solid var(--line);outline-offset:-6px;border-radius:0;padding:18px;min-width:0}
+h2{font-family:var(--display);font-weight:700;font-size:19px;line-height:1.1;margin:0 0 10px;text-wrap:balance}
+.maptabs{display:flex;gap:6px;margin-bottom:10px}
+.mapbox{position:relative;border:2px solid var(--line);border-radius:0;overflow:hidden;background:var(--sea)}
+.mapbox svg{display:block;width:100%;height:auto}
+.mapbox .z{cursor:pointer}
+.mapbox .z:hover .hit{stroke:rgba(255,255,255,.35)}
+.cursor{fill:none;stroke:var(--cursor);stroke-width:.22}
+@media (prefers-reduced-motion:no-preference){.cursor{animation:blink 1s steps(2,jump-none) infinite}}
+@keyframes blink{0%{opacity:1}100%{opacity:.25}}
+.here{margin:0;background:var(--panel);border-top:2px solid var(--line);padding:7px 10px;font:700 15px/1.2 var(--display);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.here small{font:400 13px var(--body);color:var(--muted);margin-left:8px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--muted);margin:8px 0 12px}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;border:1px solid var(--line-strong)}
+.progress{font-size:13px;color:var(--muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+#routeSearch{width:100%;margin-bottom:8px}
+.routes{max-height:320px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:2px;scrollbar-color:var(--line) transparent}
+.route{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;text-align:left;padding:8px 10px;border-radius:0;border:2px solid transparent;background:none;cursor:pointer;min-height:40px}
+.route:hover{background:var(--accent-soft)}
+.route[aria-current="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.route .rn{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.route.done .rn{text-decoration:line-through;color:var(--muted)}
+.route .tag{font-size:12px;font-weight:700;white-space:nowrap;color:var(--ok);text-transform:capitalize}
+.route.fail .tag{color:var(--muted)}
+.route .left{font:700 12px var(--body);background:var(--accent-soft);color:var(--accent);border:1px solid var(--path-edge);border-radius:0;padding:1px 7px;font-variant-numeric:tabular-nums;text-transform:none}
+.center{display:flex;flex-direction:column;gap:14px}
+.zhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px;align-items:baseline}
+.zhead h2{font-size:clamp(26px,3vw,34px);margin:0}
+.zhead small{color:var(--muted)}
+.methods{display:flex;flex-wrap:wrap;gap:6px}
+.chip:disabled{opacity:.45;cursor:not-allowed;border-style:dashed}
+.gear{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px;color:var(--muted)}
+.gear .confirm{color:var(--fg)}
+.wheelbox{position:relative;width:min(100%,440px);aspect-ratio:1;margin:4px auto 0}
+canvas{width:100%;height:100%;display:block}
+.pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:26px solid var(--fg)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.actions .btn.primary{font:700 18px var(--display);padding:10px 28px;min-height:48px}
+.result{display:flex;align-items:center;justify-content:center;gap:12px;min-height:84px;text-align:left}
+.result .rimg{width:96px;height:96px;image-rendering:pixelated;flex:none}
+.result b{display:block;font:700 clamp(28px,3.4vw,40px)/1 var(--display);color:var(--accent);text-transform:capitalize}
+.result p{margin:4px 0 0;color:var(--muted)}
+.result>p{text-align:center}
+.pool{display:flex;flex-wrap:wrap;gap:6px}
+.pk{display:inline-flex;align-items:center;gap:4px;cursor:pointer;background:var(--panel);font-size:13px;padding:2px 9px 2px 2px;border-radius:0;border:2px solid var(--line);text-transform:capitalize;min-height:40px}
+.pk:hover{border-color:var(--line-strong)}
+.pk img{width:36px;height:36px;image-rendering:pixelated}
+.pk small{font-size:12px;color:var(--muted);margin-left:2px;text-transform:none;font-variant-numeric:tabular-nums}
+.pk.dupe{text-decoration:line-through;color:var(--muted);border-style:dashed}
+.pk.dupe img{filter:grayscale(1);opacity:.55}
+.manual{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-top:2px solid var(--line);padding-top:14px}
+.manual h2{width:100%;margin:0}
+.manual input[type=text]{flex:1 1 160px}
+.manual input[type=number]{width:78px;font-variant-numeric:tabular-nums}
+.manual .msg{width:100%;font-size:13px;color:var(--accent);min-height:1em;margin:0}
+.confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px}
+.confirm input{width:18px;height:18px;accent-color:var(--accent)}
+.addp{display:flex;gap:6px}
+.addp input{width:150px}
+.team{display:flex;flex-direction:column;gap:6px}
+.mon{display:grid;grid-template-columns:56px minmax(0,1fr) auto;grid-template-areas:"img name name" "img route acts";gap:2px 8px;align-items:center;padding:6px 8px 6px 4px;border:2px solid var(--line);border-radius:0;background:var(--panel)}
+.mon>img,.mon>span:first-child{grid-area:img;width:56px;height:56px;image-rendering:pixelated}
+.mon .mn{grid-area:name;display:flex;justify-content:space-between;gap:8px;font-weight:700;text-transform:capitalize;min-width:0}
+.mon .mn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mon .mn small{font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;text-transform:none;white-space:nowrap}
+.mon .mr{grid-area:route;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.mon .mb{grid-area:acts;display:flex;gap:4px}
+.mon .mb .btn.sm{min-height:28px;padding:2px 8px;font-size:12px}
+.mon.dead{background:transparent;border-style:dashed}
+.mon.dead img{filter:grayscale(1);opacity:.5}
+.mon.dead .mn span{text-decoration:line-through;color:var(--muted)}
+.empty{color:var(--muted);font-size:14px}
+.note{color:var(--muted);font-size:13px;margin:18px 0 0;max-width:80ch}
+.note a{color:inherit;text-underline-offset:2px}
+.note a:hover{color:var(--accent)}
+.grecaptcha-badge{visibility:hidden}
+body.viewer #actions,body.viewer #manual,body.viewer #danger,body.viewer #importBtn,body.viewer #team .mb,body.viewer .players .btn,body.viewer .players form,body.viewer .confirm:has(#weighted),body.viewer .gear,body.viewer #poolHint{display:none!important}
+body.viewer .pk{cursor:default}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="shell gutter">
+  <div class="shell-in">
+    <div class="brand">
+      <a class="back" href="../"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M8 1.5 3.5 6 8 10.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg> Herramientas</a>
+      <h1>Ruleta Nuzlocke Kanto</h1>
+    </div>
+    <div class="tools-top">
+      <div class="live" id="live" hidden></div>
+      <span class="sync" id="sync" aria-live="polite">Cargando partida…</span>
+      <button class="btn sm" id="exportBtn" type="button">Exportar partida</button>
+      <button class="btn sm" id="importBtn" type="button">Importar</button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </div>
+  </div>
+</header>
+
+<main class="gutter">
+  <div class="players" id="players"></div>
+
+  <div class="layout">
+    <section class="panel mapp" aria-label="Mapa">
+      <div class="maptabs" id="mapTabs"></div>
+      <div class="mapbox"><div id="map"></div><p class="here" id="here"></p></div>
+      <div class="legend" aria-hidden="true"><span><i style="background:var(--town)"></i>Pueblo</span><span><i style="background:var(--path)"></i>Ruta</span><span><i style="background:var(--cave)"></i>Cueva</span><span><i style="background:var(--forest)"></i>Bosque</span><span><i style="background:var(--bldg)"></i>Edificio</span><span><i style="background:var(--panel);border-color:var(--muted)"></i>Pueblo sin encuentros</span><span><i style="background:var(--done)"></i>Usada</span></div>
+          </section>
+
+    <section class="panel listp" aria-label="Rutas">
+      <h2>Rutas</h2>
+      <div class="progress" id="progress"></div>
+      <input id="routeSearch" type="search" name="ruta" placeholder="Buscar ruta o Pokémon…" autocomplete="off" spellcheck="false" aria-label="Buscar ruta o Pokémon">
+      <div class="routes" id="routes"></div>
+    </section>
+
+    <section class="panel center" aria-label="Ruleta">
+      <div class="zhead"><h2 id="zname"></h2><small id="zsub"></small></div>
+      <div class="methods" id="methods" role="group" aria-label="Método de encuentro"></div>
+      <div class="gear"><span>Desbloqueado:</span><label class="confirm"><input type="checkbox" id="gSurf" name="surf"> Surf</label><label class="confirm"><input type="checkbox" id="gFish" name="cana"> Caña de pescar</label></div>
+      <div class="wheelbox"><canvas id="wheel" width="880" height="880" aria-hidden="true"></canvas><div class="pointer"></div></div>
+      <div class="result" id="result" aria-live="polite"></div>
+      <div class="actions" id="actions"></div>
+      <div>
+        <h2>En esta ruta</h2>
+        <div class="pool" id="pool"></div>
+        <p class="empty" id="poolHint" style="margin:8px 0 0;font-size:12px">Toca un Pokémon para cargarlo abajo.</p>
+      </div>
+      <form class="manual" id="manual">
+        <h2>Agregar sin ruleta</h2>
+        <input type="text" id="mName" name="pokemon" list="allMons" placeholder="Pokémon…" autocomplete="off" spellcheck="false" aria-label="Pokémon">
+        <input type="number" id="mLv" name="nivel" min="1" max="100" value="5" inputmode="numeric" aria-label="Nivel">
+        <button class="btn primary" type="submit">Agregar</button>
+        <label class="confirm"><input type="checkbox" id="mNoRoute"> No gasta la ruta (inicial o regalo)</label>
+        <p class="msg" id="mMsg" aria-live="polite"></p>
+        <datalist id="allMons"></datalist>
+      </form>
+      <label class="confirm"><input type="checkbox" id="weighted"> Usar las probabilidades del mapa (si no, todos tienen la misma chance)</label>
+    </section>
+
+    <section class="panel teamp" aria-label="Equipo">
+      <h2 id="teamTitle">Equipo</h2>
+      <div class="team" id="team"></div>
+      <div style="margin-top:14px" id="danger"></div>
+    </section>
+  </div>
+  <p class="note">Regla de repetidos: cada jugador tiene su propia lista, y un Pokémon que ya tiene ese jugador no sale en su ruleta. Si todos los de la ruta ya los tiene, puedes marcar la ruta sin captura.</p>
+  <p class="note">Mapa esquemático hecho a partir de los datos del mapa. Sprites de <a href="https://github.com/PokeAPI/sprites" target="_blank" rel="noopener noreferrer">PokeAPI</a>; Pokémon es marca de Nintendo, Game Freak y The Pokémon Company.</p>
+  <p class="note" id="captchaNote" hidden>Protegido por reCAPTCHA. Se aplican la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de privacidad</a> y las <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">Condiciones del servicio</a> de Google.</p>
+</main>
+
+<script src="../shared/storage.js"></script>
+<script src="../shared/firebase-config.js"></script>
+<script src="../shared/sync.js"></script>
+<script src="../shared/gate.js"></script>
+<script src="../shared/dex.js"></script>
+<script src="map.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

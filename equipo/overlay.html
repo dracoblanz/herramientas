@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; script-src 'self' https://www.gstatic.com https://www.google.com https://*.firebaseio.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://raw.githubusercontent.com; connect-src https://*.firebaseio.com https://*.firebasedatabase.app wss://*.firebaseio.com wss://*.firebasedatabase.app https://content-firebaseappcheck.googleapis.com https://www.google.com; frame-src https://www.google.com https://recaptcha.google.com;">
+<meta name="referrer" content="strict-origin">
+<meta name="viewport" content="width=1920,initial-scale=1">
+<title>Overlay Equipo Locke</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="overlay.css">
+</head>
+<body>
+<main class="stage" id="stage">
+  <div class="col left"><section class="box reto" id="reto" hidden></section></div>
+  <div class="col right"><section class="box medals" id="medals" hidden></section><section class="box grave" id="grave" hidden></section></div>
+  <section class="bar" id="bar" hidden></section>
+  <section class="strip" id="strip" hidden></section>
+  <section class="links" id="links" hidden></section>
+  <section class="teams" id="teams" hidden></section>
+  <p class="status" id="status" hidden></p>
+</main>
+<script src="../shared/firebase-config.js"></script>
+<script src="../shared/sync.js"></script>
+<script src="../shared/pokedata.js"></script>
+<script src="common.js"></script>
+<script src="overlay.js"></script>
+</body>
+</html>

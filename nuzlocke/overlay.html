@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; script-src 'self' https://www.gstatic.com https://www.google.com https://*.firebaseio.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://raw.githubusercontent.com; connect-src https://*.firebaseio.com https://*.firebasedatabase.app wss://*.firebaseio.com wss://*.firebasedatabase.app https://content-firebaseappcheck.googleapis.com https://www.google.com; frame-src https://www.google.com https://recaptcha.google.com;">
+<meta name="referrer" content="strict-origin">
+<meta name="viewport" content="width=1920,initial-scale=1">
+<title>Overlay Nuzlocke</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --ink:#f5f5f5;--muted:#a3a3a3;--panel:#171717;--panel-2:#0a0a0a;--line:#404040;--accent:#b37bff;--on-accent:#0a0a0a;--dead:#737373;--path:#b37bff;
+  --sea:#1f1433;--sea-deep:#593d7f;--land:#2e2e2e;--land-edge:#5a5a5a;--path-edge:#593d7f;--town:#f5f5f5;--done:#8f8f8f;--cursor:#facc15;--line-strong:#737373;
+  --cave:#ef4444;--forest:#3b82f6;--bldg:#ec4899;--beach:#e5e5e5;--ruins:#9ca3af;
+  --s1:#b37bff;--s2:#3b82f6;--s3:#ec4899;--s4:#facc15;--s5:#ef4444;--s6:#593d7f;
+  --display:"Pixelify Sans",ui-sans-serif,system-ui,sans-serif;--body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}
+body{color:var(--ink);font-family:var(--body);font-size:22px;line-height:1.3}
+body.preview{background:#4a4646}
+[hidden]{display:none!important}
+.grecaptcha-badge{visibility:hidden}
+.stage{position:fixed;inset:0;padding:40px}
+.spin{position:absolute;right:56px;top:50%;width:560px;display:flex;flex-direction:column;align-items:center;gap:18px;transform:translateY(-50%);transition:opacity .5s var(--ease),transform .6s var(--ease),filter .5s var(--ease)}
+.spin.away{opacity:0;transform:translateY(-46%) scale(.96);filter:blur(6px)}
+.wheel{position:relative;width:520px;height:520px}
+canvas{width:100%;height:100%;display:block}
+.pointer{position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:44px;height:40px}
+.pointer svg{display:block}
+.who{font:700 22px var(--display);letter-spacing:.02em;background:var(--panel);border:3px solid #593d7f;padding:8px 18px;border-radius:0;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who span{color:var(--muted);font-weight:600}
+.hit{display:flex;align-items:center;justify-content:center;gap:14px;min-height:112px;text-align:left;background:var(--panel);border:3px solid #593d7f;border-radius:0;padding:14px 26px;min-width:340px;transition:clip-path .48s steps(4,end)}
+.hit img{width:112px;height:112px;image-rendering:pixelated;flex:none}
+.hit b{display:block;font:700 56px/1 var(--display);color:var(--path);text-transform:capitalize}
+.hit p{margin:6px 0 0;color:var(--muted);font-size:22px}
+.hit.wait{clip-path:inset(0 50% 0 50%)}
+.hit.show{clip-path:inset(0 0 0 0)}
+.teams{position:absolute;left:40px;bottom:40px;display:flex;flex-direction:column;gap:12px;max-width:1180px}
+.vista-equipo .teams{max-width:none;right:40px}
+.player{display:flex;align-items:stretch;gap:10px;background:var(--panel);border:3px solid #593d7f;border-radius:0;padding:10px}
+.pname{display:flex;flex-direction:column;justify-content:center;width:200px;flex:none;padding:0 8px}
+.pname b{font:700 24px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pname small{color:var(--muted);font-size:17px;font-variant-numeric:tabular-nums}
+.mons{display:flex;flex-wrap:nowrap;gap:8px;align-items:center}
+.more{font:700 22px var(--display);color:var(--accent);padding:0 10px;font-variant-numeric:tabular-nums}
+.mon{display:grid;grid-template-columns:56px auto;grid-template-rows:auto auto;column-gap:6px;align-items:center;min-width:150px;padding:4px 14px 4px 4px;border-radius:0;background:transparent;border:0}
+.mon img{grid-row:1/3;width:56px;height:56px;image-rendering:pixelated}
+.mon b{font-size:21px;text-transform:capitalize;white-space:nowrap;align-self:end}
+.mon small{align-self:start}
+.mon small{color:var(--muted);font-size:16px;font-variant-numeric:tabular-nums}
+.mon.dead small{color:#a3a3a3}
+.mon.dead img{filter:grayscale(1)}
+.todos .mons{flex-wrap:wrap;gap:4px}
+.todos .mon{grid-template-columns:44px auto;min-width:128px;padding:2px 10px 2px 2px}
+.todos .mon img{width:44px;height:44px}
+.todos .mon b{font-size:18px}
+.todos .mon small{font-size:14px}
+.mon.dead b{text-decoration:line-through;text-decoration-thickness:2px;color:#a3a3a3}
+.mon.new{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.mon.new small{color:var(--on-accent);opacity:.8}
+.empty{color:var(--muted);font-size:18px;align-self:center;padding:0 6px}
+.mapov{position:absolute;left:40px;top:40px;width:860px;background:var(--panel);border:3px solid #593d7f;padding:14px}
+.mhead{display:flex;align-items:baseline;gap:14px;margin:0 0 10px;font:700 26px var(--display);white-space:nowrap;overflow:hidden}
+.mhead b{overflow:hidden;text-overflow:ellipsis}
+.mhead span{color:var(--cursor)}
+.mhead small{margin-left:auto;color:var(--muted);font:400 18px var(--body);font-variant-numeric:tabular-nums}
+#omap svg{display:block;width:100%;height:auto}
+.cursor{fill:none;stroke:var(--cursor);stroke-width:.26}
+@media (prefers-reduced-motion:no-preference){.cursor{animation:blink 1s steps(2,jump-none) infinite}@keyframes blink{50%{opacity:0}}}
+.vista-mapa .status{top:auto;bottom:40px}
+.status{position:absolute;left:40px;top:40px;margin:0;font-size:18px;color:var(--muted);background:var(--panel);border:3px solid #593d7f;border-radius:0;padding:8px 14px}
+@media (prefers-reduced-motion:reduce){.spin,.hit{transition:none}}
+@media (prefers-reduced-motion:no-preference){
+  .mon.new{animation:pop .9s var(--ease) both}
+  @keyframes pop{0%{transform:scale(.6);filter:blur(4px);opacity:0}100%{transform:none;filter:none;opacity:1}}
+}
+</style>
+</head>
+<body>
+<main class="stage">
+  <section class="spin away" id="spin" aria-live="polite">
+    <div class="who" id="who"></div>
+    <div class="wheel"><canvas id="wheel" width="1040" height="1040"></canvas><div class="pointer"><svg width="44" height="40" viewBox="0 0 44 40" aria-hidden="true"><polygon points="3,3 41,3 22,36" fill="#f5f5f5" stroke="#0a0a0a" stroke-width="4" stroke-linejoin="miter"/></svg></div></div>
+    <div class="hit wait" id="hit"></div>
+  </section>
+  <section class="teams" id="teams"></section>
+  <section class="mapov" id="mapov" hidden><p class="mhead" id="mhead"></p><div id="omap"></div></section>
+  <p class="status" id="status" hidden></p>
+</main>
+
+<script src="../shared/firebase-config.js"></script>
+<script src="../shared/sync.js"></script>
+<script src="../shared/dex.js"></script>
+<script src="map.js"></script>
+<script src="overlay.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+html,body{width:100%;height:100%;overflow:hidden;background:transparent}
+body.ov{font-size:18px}
+body.preview{background:#4a4646}
+.grecaptcha-badge{visibility:hidden}
+.stage{position:fixed;inset:0;max-width:none;margin:0;padding:0;display:block}
+.wov{position:absolute;inset:30px;display:grid;place-items:center}
+.wov canvas{height:100%;max-width:100%;aspect-ratio:1;width:auto;display:block}
+.bov{position:absolute;left:50%;bottom:60px;transform:translateX(-50%);max-width:calc(100% - 80px);display:flex;justify-content:center}
+.v-resultado .bov{top:50%;bottom:auto;transform:translate(-50%,-50%)}
+.bov .res{padding:22px 44px;gap:10px;border-width:4px;background:var(--panel);box-shadow:0 0 0 4px var(--ground)}
+.bov .res b{font-size:72px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:1600px}
+.bov .who{font-size:28px;gap:12px;color:var(--fg)}
+.hov{position:absolute;left:40px;top:40px;width:560px;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.hov li{display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--panel);border:3px solid var(--path-edge);min-width:0}
+.hov li:first-child{border-color:var(--accent)}
+.hov .t{display:flex;flex-direction:column;min-width:0}
+.hov small{font-size:16px;color:var(--muted);font-weight:700}
+.hov b{font:700 30px/1.1 var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status{position:absolute;left:40px;bottom:40px;margin:0;font-size:18px;color:var(--muted);background:var(--panel);border:3px solid var(--path-edge);padding:8px 14px;z-index:5}
+@media (prefers-reduced-motion:no-preference){
+  .bov.show .res{animation:bin .6s var(--ease) both}
+  .bov.show .res b{animation:glow 1.2s steps(2,jump-none) .6s 2}
+  .bov.out .res{animation:bout .45s ease-in both}
+  .hov li.in{animation:hin .6s var(--ease) both}
+  @keyframes bin{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.06);opacity:1}100%{transform:none}}
+  @keyframes bout{to{transform:scale(.9);opacity:0}}
+  @keyframes glow{50%{color:var(--accent)}}
+  @keyframes hin{from{transform:translateX(-40px);opacity:0}}
+}

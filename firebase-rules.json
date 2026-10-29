@@ -1,0 +1,171 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "salas": {
+      "$sala": {
+        ".read": "$sala.matches(/^[a-z0-9_-]{1,32}$/)",
+        "nuzlocke": {
+          ".write": "auth != null && (auth.uid === 'v3Llnx6upmP3i4Q3ZaYeKxyCu3J3' || (auth.token.email_verified === true && root.child('editores').child(auth.token.email.toLowerCase().replace('.', ',')).child('nuzlocke').val() === true)) && $sala.matches(/^[a-z0-9_-]{1,32}$/)",
+          "players": {
+            "$pid": {
+              ".validate": "$pid.matches(/^p[a-z0-9]{1,24}$/) && newData.hasChildren(['order', 'data'])",
+              "order": {
+                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() < 40"
+              },
+              "data": {
+                ".validate": "newData.isString() && newData.val().length <= 40000"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "settings": {
+            "weighted": {
+              ".validate": "newData.isBoolean()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "sel": {
+            ".validate": "newData.hasChildren(['player', 'pn', 'zone', 'zn'])",
+            "player": {
+              ".validate": "newData.isString() && newData.val().matches(/^p[a-z0-9]{1,24}$/)"
+            },
+            "pn": {
+              ".validate": "newData.isString() && newData.val().length <= 24"
+            },
+            "zone": {
+              ".validate": "newData.isString() && newData.val().length <= 40"
+            },
+            "zn": {
+              ".validate": "newData.isString() && newData.val().length <= 40"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "spin": {
+            ".validate": "newData.hasChildren(['id', 'player', 'pn', 'zone', 'zn', 'slices', 'mid', 'dur', 'p', 'lv'])",
+            "id": {
+              ".validate": "newData.isString() && newData.val().length <= 40"
+            },
+            "player": {
+              ".validate": "newData.isString() && newData.val().matches(/^p[a-z0-9]{1,24}$/)"
+            },
+            "pn": {
+              ".validate": "newData.isString() && newData.val().length <= 24"
+            },
+            "zone": {
+              ".validate": "newData.isString() && newData.val().length <= 40"
+            },
+            "zn": {
+              ".validate": "newData.isString() && newData.val().length <= 40"
+            },
+            "m": {
+              ".validate": "newData.isString() && newData.val().length <= 20"
+            },
+            "slices": {
+              "$i": {
+                ".validate": "$i.matches(/^[0-9]{1,2}$/) && newData.hasChildren(['p', 'start', 'end'])",
+                "p": {
+                  ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9][a-z0-9 =?!]{0,29}$/)"
+                },
+                "start": {
+                  ".validate": "newData.isNumber()"
+                },
+                "end": {
+                  ".validate": "newData.isNumber()"
+                },
+                "$other": {
+                  ".validate": false
+                }
+              }
+            },
+            "mid": {
+              ".validate": "newData.isNumber()"
+            },
+            "dur": {
+              ".validate": "newData.isNumber() && newData.val() >= 100 && newData.val() <= 10000"
+            },
+            "p": {
+              ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9][a-z0-9 =?!]{0,29}$/)"
+            },
+            "lv": {
+              ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 100"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "equipo": {
+          ".write": "auth != null && (auth.uid === 'v3Llnx6upmP3i4Q3ZaYeKxyCu3J3' || (auth.token.email_verified === true && root.child('editores').child(auth.token.email.toLowerCase().replace('.', ',')).child('equipo').val() === true)) && $sala.matches(/^[a-z0-9_-]{1,32}$/)",
+          "data": {
+            ".validate": "newData.isString() && newData.val().length <= 60000"
+          },
+          "p": {
+            "$pid": {
+              ".validate": "$pid.matches(/^p[a-z0-9]{1,24}$/) && newData.isString() && newData.val().length <= 40000",
+              ".write": "auth != null && data.parent().parent().child('who').child($pid).val() === auth.uid"
+            }
+          },
+          "who": {
+            "$pid": {
+              ".write": "auth != null && !data.exists() && newData.val() === auth.uid && auth.token.email_verified === true && root.child('acceso').child(auth.token.email.toLowerCase().replace('.', ',')).val() === true",
+              ".validate": "$pid.matches(/^p[a-z0-9]{1,24}$/) && newData.isString() && newData.val().length <= 128"
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "torneo": {
+          ".write": "auth != null && (auth.uid === 'v3Llnx6upmP3i4Q3ZaYeKxyCu3J3' || (auth.token.email_verified === true && root.child('editores').child(auth.token.email.toLowerCase().replace('.', ',')).child('torneo').val() === true)) && $sala.matches(/^[a-z0-9_-]{1,32}$/)",
+          "data": {
+            ".validate": "newData.isString() && newData.val().length <= 60000"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "ruleta": {
+          ".write": "auth != null && (auth.uid === 'v3Llnx6upmP3i4Q3ZaYeKxyCu3J3' || (auth.token.email_verified === true && root.child('editores').child(auth.token.email.toLowerCase().replace('.', ',')).child('ruleta').val() === true)) && $sala.matches(/^[a-z0-9_-]{1,32}$/)",
+          "data": {
+            ".validate": "newData.isString() && newData.val().length <= 60000"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "acceso": {
+      ".read": "auth != null && auth.uid === 'v3Llnx6upmP3i4Q3ZaYeKxyCu3J3'",
+      ".write": "auth != null && auth.uid === 'v3Llnx6upmP3i4Q3ZaYeKxyCu3J3'",
+      "$k": {
+        ".read": "auth != null && auth.token.email_verified === true && auth.token.email.toLowerCase().replace('.', ',') === $k",
+        ".validate": "$k.length <= 120 && newData.isBoolean() && newData.val() === true"
+      }
+    },
+    "editores": {
+      ".read": "auth != null && auth.uid === 'v3Llnx6upmP3i4Q3ZaYeKxyCu3J3'",
+      ".write": "auth != null && auth.uid === 'v3Llnx6upmP3i4Q3ZaYeKxyCu3J3'",
+      "$k": {
+        ".read": "auth != null && auth.token.email_verified === true && auth.token.email.toLowerCase().replace('.', ',') === $k",
+        ".validate": "$k.length <= 120 && newData.hasChildren()",
+        "$tool": {
+          ".validate": "$tool.matches(/^[a-z0-9-]{1,24}$/) && newData.isBoolean() && newData.val() === true"
+        }
+      }
+    }
+  }
+}

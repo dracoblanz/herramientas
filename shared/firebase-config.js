@@ -1,0 +1,9 @@
+window.FIREBASE_CONFIG={
+  apiKey:"AIzaSyC5Gd9DTlqkLV3wPrEuA4RwAqL4YoItGa4",
+  authDomain:"herramientas-playart.firebaseapp.com",
+  databaseURL:"https://herramientas-playart-default-rtdb.firebaseio.com",
+  projectId:"herramientas-playart",
+  appId:"1:180353883176:web:d011f0cc99d1c84937a91d",
+  ownerUid:"v3Llnx6upmP3i4Q3ZaYeKxyCu3J3",
+  appCheckKey:"6LfLfwYuAAAAAMhB0EdNg5mAKCUaLRmGiWLWL6iw"
+};
